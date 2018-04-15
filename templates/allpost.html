@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Buid-A-Blog2018!</h1>
+
+{% for post in all_posts %}
+<div class='blog'>
+    <div class='post_title'>{{title}}</div>
+    <div class='post_body'>{{body}}</div>
+    <hr />
+</div>
+{% endfor %}
+
+{% endblock %}
