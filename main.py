@@ -24,10 +24,10 @@ class Blog(db.Model):
 
 
 @app.route('/blog', methods=['POST','GET'])
-def blog_total():
+def blog_total(): 
     all_posts=Blog.query.order_by(Blog.id).all()
     print(all_posts)
-    return render_template('allpost.html',all_posts=all_posts)
+    return render_template('allpost.html', all_posts=all_posts)
 
 @app.route('/newpost')
 def display_newpost_form():
@@ -35,6 +35,7 @@ def display_newpost_form():
     body=''
     title_error=''
     body_error=''
+    
     return render_template('newpost.html',title=title,body=body,title_error=title_error,
                 body_error=body_error)
 
@@ -52,65 +53,17 @@ def new_post():
         new_post = Blog(title, body)
         db.session.add(new_post)
         db.session.commit()
+        # flash('New post added')
     
     return redirect('/blog')
 
-    @app.route('/blog?id=')
-    def single_post():
-        singlepost = Blog.get_by_id(int(id))
-        return render_template('singlepost.html',singlepost=singlepost,title=title,body=body)
-
-
-    '''
-        if not title:
-            title_error = 'Please give it a title'
-        if not body:
-            body_error = 'Please write something'
-    
-        if title_error or body_error:
-            return render_template('newpost.html',title=title,body=body,title_error=title_error,
-                body_error=body_error)
-        else:
-            title = request.form('title')
-            body = request.form('body')
-            new_post = Blog(title, body)
-            db.session.add(new_post)
-            db.session.commit()
-        all_posts = Blog.query.order_by(id).all()
-        return render_template('allpost.html')
-        
-
-    
-    return render_template('newpost.html')
-    '''
-
-'''
-@app.route('/', methods=['POST', 'GET'])
-def index():
-
-    if request.method == 'POST':
-        task_name = request.form['task']
-        new_task = Task(task_name)
-        db.session.add(new_task)
-        db.session.commit()
-
-    tasks = Task.query.filter_by(completed=False).all()
-    completed_tasks = Task.query.filter_by(completed=True).all()
-    return render_template('todos.html',title="Get It Done!", 
-        tasks=tasks, completed_tasks=completed_tasks)
-
-
-@app.route('/delete-task', methods=['POST'])
-def delete_task():
-
-    task_id = int(request.form['task-id'])
-    task = Task.query.get(task_id)
-    task.completed = True
-    db.session.add(task)
-    db.session.commit()
-
-    return redirect('/')
-'''
+@app.route('/singlepost', methods=['GET','POST'])
+def single_post():
+    # TODO: Look at delete_task in get-it-done
+    post_ided = Blog.query.get(id)
+    singlepost="?id="+ post_ided
+    print(singlepost)
+    return redirect('/blog{singlepost}' .format(singlepost=singlepost))
 
 if __name__ == '__main__':
     app.run()
