@@ -24,11 +24,13 @@ class Blog(db.Model):
 
 @app.route('/blog', methods=['POST', 'GET'])
 def blog_total():
-    if request.method == 'POST':
-        
-    all_posts=Blog.query.order_by(Blog.id).all() 
-    return render_template('allpost.html', all_posts=all_posts)
-
+    if request.method == 'GET' and request.args.get('id'):
+        id = request.args.get('id')
+        all_posts = Blog.query.filter_by(id=id).all()
+        return render_template('allpost.html', all_posts=all_posts)
+    else:
+        all_posts=Blog.query.order_by(Blog.id).all()
+        return render_template('allpost.html', all_posts=all_posts)
 
 @app.route('/newpost')
 def display_newpost_form():
@@ -49,7 +51,10 @@ def new_post():
             db.session.commit()
             flash("New post added")
             # all_posts = Blog.query.order_by(id).all()
-            return redirect('/blog')
+            id = new_post.id
+            all_posts = Blog.query.filter_by(id=id).all()
+            id = str(id)
+            return redirect('/blog?id='+id)
         else:
             flash("We need a title and text in the body of the post")
             return render_template('newpost.html',title=title,body=body)
