@@ -3,16 +3,14 @@
 {% block content %}
 <h1>Buid-A-Blog2018!</h1>
 
-{% if all_posts|length == 0 %}
-        <p>No post yet</p>
-{% else %}
-    {% for post in all_posts %}
-        <div class='blog'>
-            <div class='post_title'>{{ post.title }}</div>
-            <div class='post_body'>{{ post.body }}</div>
-            <hr />
+{% for post in all_posts %}
+    <div class='blog'>
+        <div class='post_title'>
+            <a href='/blog?id={{ post.id }}'>{{ post.title }}</a>
         </div>
-    {% endfor %}
-{% endif %}
+        <div class='post_body'>{{ post.body }}</div>
+        <hr />
+    </div>
+{% endfor %}
 
 {% endblock %}

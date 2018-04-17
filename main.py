@@ -16,18 +16,19 @@ class Blog(db.Model):
     title = db.Column(db.String(120))
     body = db.Column(db.String(1200))
     # created = Column(DateTime, default=datetime.datetime.utcnow())
-    
 
     def __init__(self, title, body):
         self.title = title
         self.body = body
 
 
-@app.route('/blog', methods=['POST','GET'])
-def blog_total(): 
-    all_posts=Blog.query.order_by(Blog.id).all()
-    print(all_posts)
+@app.route('/blog', methods=['POST', 'GET'])
+def blog_total():
+    if request.method == 'POST':
+        
+    all_posts=Blog.query.order_by(Blog.id).all() 
     return render_template('allpost.html', all_posts=all_posts)
+
 
 @app.route('/newpost')
 def display_newpost_form():
