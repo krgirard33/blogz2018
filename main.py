@@ -3,23 +3,36 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:ChinaIsADog@localhost:8889/build-a-blog'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:ChinaIsADog@localhost:8889/build-a-blog'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 app.secret_key='OICU812-WadUthink?'
 # added the current time to use later on, might need an import
 # current_time = datetime.datetime.utcnow()
 
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20))
+    password = db.Column(db.String(25))
+    blogs = db.relationship('Blog', backref='owner')
+
+    def __init__(self, username, password, blogs):
+        self.username = username
+        self.password = password
+        self.blogs = blogs
+
 class Blog(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120))
     body = db.Column(db.String(1200))
+    owner_id = db.Column(db.Integer, db.ForeignKey(User.id))
     # created = Column(DateTime, default=datetime.datetime.utcnow())
 
-    def __init__(self, title, body):
+    def __init__(self, title, body, owner_id):
         self.title = title
         self.body = body
+        self.owner_id = owner_id
 
 
 @app.route('/blog', methods=['POST', 'GET'])
