@@ -33,7 +33,15 @@ class Blog(db.Model):
 
 #TODO: app.before_request goes here
 
-#TODO: logout goes here
+
+@app.route('/logout')
+def logout():
+    del session['username']
+    return redirect('/')
+
+@app.route('/')
+def index():
+    return redirect('/blog')
 
 #Login them in
 @app.route('/login', methods=['POST','GET'])
@@ -67,8 +75,10 @@ def login():
 
 @app.route('/signup', methods=['POST','GET'])
 def signup():
-    if request.method=='GET':
+    '''if request.method=='GET':
         return render_template('signup.html')
+        '''
+        
 
     if request.method=='POST':
         username=request.form['username']
@@ -82,26 +92,32 @@ def signup():
 
         #validate if existing user
         if existing_user:
-            username_error='That email address is already registered for a user'
+            username_error='That username is already registered for a user'
             return render_template('signup.html',username=username,username_error=username_error)
 
-        #validate email/username
+        #validate username
         if not username:
-            username_error='Please enter your email address'
+            username_error='Please enter your username'
             have_error=True
-        elif ' ' in username or not '@' in username or not '.' in username:
-            username_error='Email is not valid'
+
+        if ' ' in username:
+            username_error='Spaces not allowed'
             have_error=True
+        
+        if len(username) <3 or len(username) >20:
+                username_error='Username must be between 3 & 20 characters long, no blank spaces allowed'
+                have_error=True
         
         #validate password
         if not password:
             password_error='You must enter a password'
             have_error=True
-        elif ' ' in password:
+
+        if ' ' in password:
             password_error='No blank spaces in password'
             have_error=True
-        else: 
-            if len(password)<3 and len(password)>20:
+
+        if len(password)<3 or len(password)>20:
                 password_error='Password must be between 3 & 20 characters long, no blank spaces allowed'
                 have_error=True
         
@@ -118,10 +134,9 @@ def signup():
             session['username']=username
             return redirect('/blog')
         else:
-            username=username
             return render_template('signup.html',username=username,username_error=username_error,password_error=password_error,verify_error=verify_error) 
         
-        return render_template('signup.html')
+    return render_template('signup.html')
 
 @app.route('/blog', methods=['POST', 'GET'])
 def blog_total():
@@ -160,7 +175,6 @@ def new_post():
             new_post = Blog(title, content, owner)
             db.session.add(new_post)
             db.session.commit()
-            print('made it to commit')
             flash("New post added")
             # all_posts = Blog.query.order_by(id).all()
             id = new_post.id
