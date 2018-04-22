@@ -2,11 +2,15 @@
 
 {% block content %}
 
-{% for post in all_posts %}
-<div class='blog'>
-    <div class='post_title'>{{title}}</div>
-    <div class='post_content'>{{content}}</div>
-    <hr />
-</div>
+{% for post in user_posts %}
+    <div class='blog'>
+        <div class='post-title'>
+            <a href='/blog?id={{ post.id }}'>{{ post.title }}</a>
+        </div>
+        <div class='post-content'>{{ post.content }}</div>
+        <div>Written by <a href='blog?username={{ post.owner.username }}'>{{ post.owner.username }}</a></div>
+        <hr />
+    </div>
+{% endfor %}
 
 {% endblock %}

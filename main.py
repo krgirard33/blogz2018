@@ -150,6 +150,13 @@ def blog_total():
         id = request.args.get('id')
         all_posts = Blog.query.filter_by(id=id).all()
         return render_template('allpost.html', all_posts=all_posts)
+
+    if request.method == 'GET' and request.args.get('username'):
+        username = request.args.get('username')
+        user_id = User.query.get('username')
+        user_posts = Blog.query.filter_by(owner_id=user_id).all()
+        return render_template('singlepost.html', user_posts=user_posts)
+
     else:
         all_posts=Blog.query.order_by(Blog.id).all()
         return render_template('allpost.html', all_posts=all_posts)
@@ -191,7 +198,6 @@ def new_post():
             flash("We need a title and text in the body of the post")
             return render_template('newpost.html',title=title,content=content,title_error=title_error,content_error=content_error)
     else:
-        print('we made it to plain jane ville')
         title=''
         content=''
         return render_template('newpost.html',title=title,content=content)
