@@ -5,10 +5,10 @@
 
 {% for post in all_posts %}
     <div class='blog'>
-        <div class='post_title'>
+        <div class='post-title'>
             <a href='/blog?id={{ post.id }}'>{{ post.title }}</a>
         </div>
-        <div class='post_content'>{{ post.content }}</div>
+        <div class='post-content'>{{ post.content }}</div>
         <div>Written by {{ post.owner.username }}</div>
         <hr />
     </div>
