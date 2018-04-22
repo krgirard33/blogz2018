@@ -9,6 +9,7 @@
             <a href='/blog?id={{ post.id }}'>{{ post.title }}</a>
         </div>
         <div class='post_content'>{{ post.content }}</div>
+        <div>Written by {{ post.owner.username }}</div>
         <hr />
     </div>
 {% endfor %}
