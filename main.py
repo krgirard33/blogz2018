@@ -32,7 +32,12 @@ class Blog(db.Model):
         self.owner = owner
 
 #TODO: app.before_request goes here
-
+@app.before_request
+def require_login():
+    safe_routes = ['blog_total','login','signup']
+    if 'username' not in session:
+        if request.endpoint not in safe_routes: 
+                return redirect('/login')
 
 @app.route('/logout')
 def logout():
@@ -46,10 +51,11 @@ def index():
 #Login them in
 @app.route('/login', methods=['POST','GET'])
 def login():
-    '''This is were we log them in at'''
-    '''if request.method =='GET':
-        return render_template('login.html')
-        '''
+    ''' This is where we log them in at '''
+    if ('username' in session):
+        flash('You are already logged in')
+        return redirect('/')
+
     if request.method=='POST':
         username=request.form['username']
         password=request.form['password']
