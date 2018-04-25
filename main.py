@@ -37,7 +37,7 @@ def require_login():
     safe_routes = ['blog_total','login','signup','index']
     if 'username' not in session:
         if request.endpoint not in safe_routes: 
-                return redirect('/login')
+            return redirect('/login')
 
 @app.route('/logout')
 def logout():
