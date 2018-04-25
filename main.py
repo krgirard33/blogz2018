@@ -34,7 +34,7 @@ class Blog(db.Model):
 #TODO: app.before_request goes here
 @app.before_request
 def require_login():
-    safe_routes = ['blog_total','login','signup']
+    safe_routes = ['blog_total','login','signup','index']
     if 'username' not in session:
         if request.endpoint not in safe_routes: 
                 return redirect('/login')
@@ -46,7 +46,15 @@ def logout():
 
 @app.route('/')
 def index():
-    return redirect('/blog')
+    if request.method == 'GET' and request.args.get('username'):
+        username = request.args.get('username')
+        user_id = User.query.get('username')
+        user_posts = Blog.query.filter_by(owner_id=user_id).all()
+        return render_template('singlepost.html', user_posts=user_posts, username=username)
+
+    all_users=User.query.order_by(User.username).all()
+    return render_template('index.html', all_users=all_users)
+
 
 #Login them in
 @app.route('/login', methods=['POST','GET'])
@@ -152,21 +160,20 @@ def blog_total():
         return render_template('allpost.html', all_posts=all_posts)
 
     if request.method == 'GET' and request.args.get('username'):
-        username = request.args.get('username')
-        user_id = User.query.get('username')
-        user_posts = Blog.query.filter_by(owner_id=user_id).all()
-        return render_template('singlepost.html', user_posts=user_posts)
+        '''username = request.args.get('username')
+        owner_id = User.query.filter_by(id=username).first()
+        owner_id = owner_name.id
+        user_posts = Blog.query.filter_by(owner_id=owner_id).all()
+        return render_template('singlepost.html', user_posts=user_posts, owner_id=owner_id)'''
+        
+        '''user_id = request.args.get('username')
+        user = User.query.get(user_id)
+        blogs = Blog.query.filter_by(owner_id=user_id).all()
+        return render_template('singlepost.html', user=user, blogs=blogs, username=user_id)'''
 
     else:
-        all_posts=Blog.query.order_by(Blog.id).all()
+        all_posts=Blog.query.order_by(Blog.owner_id).all()
         return render_template('allpost.html', all_posts=all_posts)
-
-'''@app.route('/newpost')
-def display_newpost_form():
-    title=''
-    content=''
-    return render_template('newpost.html',title=title,content=content)
-    '''
 
 @app.route('/newpost', methods=['POST', 'GET'])
 def new_post():
