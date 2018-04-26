@@ -2,11 +2,11 @@
 {% block content %}
     <h1>Blog Posts!!</h1>
     <p>single</p>
-    {{user.username}}
+
 	{% for post in blogs %}
 		<h2><a href="/blog?id={{post.id}}">{{post.title}}</a></h2>
 		<p>{{post.body}}</p>
-		<p class='author'>written by <a href="/blog?user={{post.owner.username}}">{{user.username}}</a></p>
+		<p class='owner'>written by <a href="/blog?user={{post.owner.id}}">{{user.username}}</a></p>
 		<hr>
 	{% endfor %}
 {% endblock %}

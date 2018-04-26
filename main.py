@@ -152,6 +152,14 @@ def signup():
         
     return render_template('signup.html')
 
+@app.route('/cow', methods=['Post','Get'])
+def single():
+    user_id = request.args.get('user')
+    blogs = Blog.query.filter_by(owner_id=user_id).all()
+    return render_template('user.html', blogs = blogs)
+    
+
+
 @app.route('/blog', methods=['POST', 'GET'])
 def blog_total():
     if request.method == 'GET' and request.args.get('id'):
@@ -159,7 +167,7 @@ def blog_total():
         all_posts = Blog.query.filter_by(id=id).all()
         return render_template('allpost.html', all_posts=all_posts)
 
-    if request.method == 'GET' and request.args.get('username'):
+    if request.args.get('user'):
         '''username = request.args.get('username')
         owner_id = User.query.filter_by(id=username).first()
         owner_id = owner_name.id
@@ -167,9 +175,14 @@ def blog_total():
         return render_template('singlepost.html', user_posts=user_posts, owner_id=owner_id)'''
         
         '''user_id = request.args.get('username')
+        print(user_id)
         user = User.query.get(user_id)
         blogs = Blog.query.filter_by(owner_id=user_id).all()
-        return render_template('singlepost.html', user=user, blogs=blogs, username=user_id)'''
+        return render_template('singlepost.html', user=user, blogs=blogs)'''
+
+        user_id = request.args.get('user')
+        blogs = Blog.query.filter_by(owner_id=user_id).all()
+        return render_template('user.html', blogs = blogs)
 
     else:
         all_posts=Blog.query.order_by(Blog.owner_id).all()
