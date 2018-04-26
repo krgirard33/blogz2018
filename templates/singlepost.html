@@ -4,8 +4,8 @@
     <p>single</p>
     {{user.username}}
 	{% for post in blogs %}
-		<h2><a href="/blog?id={{post.id}}">{{posts.title}}</a></h2>
-		<p>{{posts.body}}</p>
+		<h2><a href="/blog?id={{post.id}}">{{post.title}}</a></h2>
+		<p>{{post.body}}</p>
 		<p class='author'>written by <a href="/blog?user={{post.owner.username}}">{{user.username}}</a></p>
 		<hr>
 	{% endfor %}
